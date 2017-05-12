@@ -65,9 +65,9 @@ Here is an exploratory visualization of the data set. It is a bar chart showing 
 
 #### 1. Describe how, and identify where in your code, you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc.
 
-The code for this step is contained in the fifth code cell of the IPython notebook.
+The code for this step is contained in the 5th code cell of the IPython notebook.
 
-As a first step, I decided to euqalize the histogram of the images using [Contrast Limited Adaptive Histogram Equalization](http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_histograms/py_histogram_equalization/py_histogram_equalization.html) because I realized that the most of the images were taken at very low contrast condition.
+As a first step, I decided to euqualize the histogram of the images using [Contrast Limited Adaptive Histogram Equalization](http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_histograms/py_histogram_equalization/py_histogram_equalization.html) because I realized that the most of the images were taken at very low contrast condition.
 
 Here is an example of a traffic sign image before and after normalization.
 
@@ -85,7 +85,7 @@ Here is an example of an original image and an augmented image:
 
 #### 3. Describe, and identify where in your code, what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
-The code for my final model is located in the ninth cell of the ipython notebook. 
+The code for my final model is located in the 9th cell of the ipython notebook. 
 
 My final model consisted of the following layers:
 
@@ -112,18 +112,21 @@ My final model consisted of the following layers:
 
 #### 4. Describe how, and identify where in your code, you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
-The code for training the model is located in the fourteenth cell of the ipython notebook. 
+The code for training the model is located in the 15th cell of the ipython notebook. 
 
 To train the model, I used an Adam optimizer with learning rate of 1e-1 as stated in 13rd cell. The model was trained across 1000 epochs with batch size of 32. The best accuracy recorded at epoch 380th was 99.1% on the original validation set.
 
 #### 5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
-The code for calculating the accuracy of the model is located in the 12th cell of the Ipython notebook.
+The code for calculating the accuracy of the model is located in the 12th cell of the Ipython notebook. Here is my iterative process to find a suitable architecture:
+1. Design a architecture
+2. Train model
+3. Test on validation set, if the accuracy is less than requirement, modify the architecture, then go to step 2.
 
 My final model results were:
 * validation set accuracy of 99.1%
 
-I chose the architecture described in [this paper](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf), which exploited the multiscale feature maps of the CNN to improve the overall accuracy of the models.
+My architecture was similar to the one described in [this paper](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf), which exploited the multiscale feature maps of the CNN to improve the overall accuracy of the models. Remarkably, instead of using dropout, which actually harmed the perfomance, this architecture used the skip connection, which connected the feature map of the second convolutional layer directly to the 4th one. As a result, this connection let the information of smaller scale, which could vanish through the pooling layer, flow directly to the fully connected layer, making the model more scale-invariant.
  
 
 ### Test a Model on New Images
@@ -132,8 +135,14 @@ I chose the architecture described in [this paper](http://yann.lecun.com/exdb/pu
 
 Here are five German traffic signs that I found on the web. The quality of these images seems to be quite good to human perception. Let's try this on the train model.
 
-![alt text][image4] ![alt text][image5] ![alt text][image6] 
-![alt text][image7] ![alt text][image8]
+| Image			    |Ground truth       |Brightness|Contrast|Noise   |
+|:-----------------:|:-----------------:|:--------:|:------:|:------:|
+|![alt text][image8]|Children Crossing	| High     |Good    |Tree branches in the backgound, watermark on the sign|
+|![alt text][image5]|Pedestrians 	    | High     |Good    |Tree branches in the backgound, watermark on the sign|
+|![alt text][image6]|Runabout Mandantory| High     |Good    |Watermark on the sign|
+|![alt text][image4]|Speed limit 60 km/h| High     |Good    |Watermark on the sign with perspective distortion|
+|![alt text][image7]|Keep right      	| High     |Good    |Watermark on the sign with perspective distortion|
+
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Identify where in your code predictions were made. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
@@ -141,13 +150,13 @@ The code for making predictions on my final model is located in the 19th cell of
 
 Here are the results of the prediction:
 
-| Image			        |     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| Children Crossing     | Children Crossing   							| 
-| Pedestrians     		| Pedestrians 									|
-| Runabout Mandantory	| Runabout Mandantory							|
-| Speed limit 60 km/h	| Speed limit 60 km/h					 		|
-| Keep right			| Keep right      							    |
+| Image			    | Ground truth			|     Prediction	        					| 
+|:-----------------:|:---------------------:|:---------------------------------------------:| 
+|![alt text][image8]| Children Crossing     | Children Crossing   							| 
+|![alt text][image5]| Pedestrians     		| Pedestrians 									|
+|![alt text][image6]| Runabout Mandantory	| Runabout Mandantory							|
+|![alt text][image4]| Speed limit 60 km/h	| Speed limit 60 km/h					 		|
+|![alt text][image7]| Keep right			| Keep right      							    |
 
 
 The model was able to correctly guess 5 of the 5 traffic signs, which gives an accuracy of 100%. This compares favorably to the accuracy on the validation set of 99.1%
@@ -159,3 +168,4 @@ The code for making predictions on my final model is located in the 20th cell of
 For all of the images in the new test set, the model was quite certain in predicting their labels. Specifically, the confident score of each sample was almost 1 as shown in the following bar chart.
 
 ![alt text][image9]
+
